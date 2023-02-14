@@ -1,0 +1,26 @@
+version: "3.8"
+services:
+  app:
+    build: ./
+    container_name: app
+    environment:
+      - POSTGRES_URL=jdbc:postgresql://sql_database:5432/postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_USERNAME=postgres
+  sql_database:
+    image: postgres:15.2-alpine
+    restart: always
+    user: postgres
+    expose:
+      - 5432
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_PASSWORD=postgres
+    volumes:
+      - ./sql_database/init.sql:/docker-entrypoint-initdb.d/create_tables.sql
+  adminer:
+      image: adminer
+      restart: always
+      ports:
+        - 8080:8080
